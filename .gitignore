@@ -1,4 +1,4 @@
-# Taken from https://github.com/github/gitignore/blob/master/Python.gitignore
+# Modified from https://github.com/github/gitignore/blob/master/Python.gitignore
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -135,3 +135,6 @@ dmypy.json
 
 # pytype static type analyzer
 .pytype/
+
+# Others
+.vscode/
