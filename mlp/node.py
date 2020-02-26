@@ -21,6 +21,9 @@ class InputNode(Node):
 
 
 class BiasNode(Node):
+    def __init__(self):
+        self.error = 0
+
     def value(self):
         return 1
 
@@ -29,7 +32,7 @@ class OutputNode(Node):
     def __init__(self, bias=0):
         self.input = {BiasNode(): [bias, 0]}
         self.val = bias
-        self.err = 0
+        self.error = 0
 
     def add_child(self, node, weight=0):
         self.input[node] = [weight, 0]
@@ -50,8 +53,3 @@ class OutputNode(Node):
         for node in self.input:
             val += self.input[node][0] * node.value()
         self.val = sigmoid(val)
-
-    def error(self):
-        return self.err
-
-    def 
