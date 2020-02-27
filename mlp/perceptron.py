@@ -43,15 +43,7 @@ class MultilayerPerceptron:
         for lvl, layer in reversed(list(enumerate(self.nodes))):
             if lvl == len(self.nodes) - 1:
                 for node, val in zip(layer, target):
-                    node.error = (
-                        node.value() * (1 - node.value()) * (val - node.value())
-                    )
-
-            if lvl >= 2:
-                for node in layer:
-                    for child in node.input:
-                        if isinstance(child, OutputNode):
-                            child.error += node.input[child][0] * node.error
+                    node.error = val - node.value()
 
             if lvl != 0:
                 for node in layer:
@@ -60,6 +52,14 @@ class MultilayerPerceptron:
                         node.add_weight(
                             child, self.learning_rate * node.error * child.value()
                         )
+
+            if lvl >= 2:
+                for node in layer:
+                    for child in node.input:
+                        if isinstance(child, OutputNode):
+                            child.error += node.input[child][0] * node.error
+
+
 
     def fit(self, input, target):
         self.forward_prop(input)
