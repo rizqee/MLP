@@ -15,6 +15,10 @@ Implementasi modul myMLP (multilayer perceptron) dengan mini-batch gradient desc
 
 ## Cara Menjalankan Program
 
+```bash
+python3 -m mlp
+```
+
 ## Hasil Eksekusi Program
 
 ## Perbandingan Program dengan SKlearn

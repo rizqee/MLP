@@ -21,9 +21,6 @@ class InputNode(Node):
 
 
 class BiasNode(Node):
-    def __init__(self):
-        self.error = 0
-
     def value(self):
         return 1
 

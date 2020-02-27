@@ -53,14 +53,15 @@ class MultilayerPerceptron:
             if lvl >= 2:
                 for node in layer:
                     for child in node.input:
-                        child.error += node.input[child][0] * node.error
+                        if isinstance(child, OutputNode):
+                            child.error += node.input[child][0] * node.error
 
             if lvl != 0:
                 for node in layer:
                     node.error *= node.value() * (1 - node.value())
                     for child in node.input:
-                        node.input[child][1] += (
-                            self.learning_rate * node.error * child.value()
+                        node.add_weight(
+                            child, self.learning_rate * node.error * child.value()
                         )
 
     def fit(self, input, target):
