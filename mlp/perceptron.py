@@ -1,9 +1,13 @@
 from mlp.node import Node, InputNode, BiasNode, OutputNode
+import numpy as np
 
 class MultilayerPerceptron:
     def __init__(self, layer, learning_rate):
         if not layer:
             raise ValueError("layer must be a nonempty array")
+        
+        self.input_layer = layer[0]
+        self.output_layer = layer[-1]
 
         self.nodes = []
         prev_layer = []
@@ -22,6 +26,10 @@ class MultilayerPerceptron:
             self.nodes.append(prev_layer)
 
         self.learning_rate = learning_rate
+
+        self.error_sum = 0
+
+        self.randomize_weight()
 
     def forward_prop(self, input):
         if len(input) != len(self.nodes[0]):
@@ -59,11 +67,24 @@ class MultilayerPerceptron:
                         if isinstance(child, OutputNode):
                             child.error += node.input[child][0] * node.error
 
-
+    def produce_output(self, input):
+        self.forward_prop(input)
+        return [node.value() for node in self.nodes[-1]]
 
     def fit(self, input, target):
         self.forward_prop(input)
         self.backward_prop(target)
+        self.update_error(target)
+
+    def error(self):
+        return self.error_sum
+
+    def update_error(self, target):
+        for i, node in enumerate(self.nodes[-1]): 
+            self.error_sum += (target[i] - node.value())**2 / 2
+
+    def reset_error(self):
+        self.error_sum = 0
 
     def update_weight(self):
         for lvl, layer in enumerate(self.nodes):
@@ -98,6 +119,13 @@ class MultilayerPerceptron:
                 else:
                     print(' - H' + str(lvl) + ',' + str(i) + ': ', end='')
                 print(node.input[BiasNode()][0])
-                                                    
-                    
 
+    def randomize_weight(self):
+        for lvl, layer in enumerate(self.nodes):
+            if lvl == 0:
+                continue
+            for i, node in enumerate(layer):
+                for j, prev_node in enumerate(self.nodes[lvl-1]):
+                    node.input[prev_node][0] = np.random.normal()*np.sqrt(1/(self.input_layer + self.output_layer))
+                node.input[BiasNode()][0] = np.random.normal()*np.sqrt(1/(self.input_layer + self.output_layer))                                    
+                    

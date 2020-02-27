@@ -51,6 +51,9 @@ class OutputNode(Node):
     def value(self):
         return self.val
 
+    def error(self):
+        return self.error
+
     def calc_value(self):
         val = 0
         for node in self.input:

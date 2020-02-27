@@ -1,32 +1,32 @@
 from mlp.perceptron import MultilayerPerceptron
 from mlp.node import BiasNode
+from mlp.mini_batch import MiniBatch
+import copy
+import csv
 
 if __name__ == "__main__":
-    bias_node_1 = BiasNode()
-    bias_node_2 = BiasNode()
-    if id(bias_node_1) == id(bias_node_2):
-        print('same id')
-    mlp = MultilayerPerceptron([2, 2, 2], 0.5)
-    mlp.nodes[1][0].input[mlp.nodes[0][0]][0] = 0.15
-    mlp.nodes[1][0].input[mlp.nodes[0][1]][0] = 0.2
-    mlp.nodes[1][1].input[mlp.nodes[0][0]][0] = 0.25
-    mlp.nodes[1][1].input[mlp.nodes[0][1]][0] = 0.3
-    mlp.nodes[2][0].input[mlp.nodes[1][0]][0] = 0.4
-    mlp.nodes[2][0].input[mlp.nodes[1][1]][0] = 0.45
-    mlp.nodes[2][1].input[mlp.nodes[1][0]][0] = 0.5
-    mlp.nodes[2][1].input[mlp.nodes[1][1]][0] = 0.55
+    data=[]
+    with open('iris.csv', 'r') as f:
+        reader = csv.reader(f)
+        data = list(reader)
+        data.pop(0)
+    
+    for i in range(len(data)):
+        for j in range(len(data[0]) - 1):
+            data[i][j] = float(data[i][j]) 
+    
+    original_data = copy.deepcopy(data)
 
-    mlp.nodes[1][0].input[BiasNode()][0] = 0.35
-    mlp.nodes[1][1].input[BiasNode()][0] = 0.35
-    mlp.nodes[2][0].input[BiasNode()][0] = 0.6
-    mlp.nodes[2][1].input[BiasNode()][0] = 0.6
+    mb = MiniBatch(data, 0.001, 5, 0.1, [2,2,2], 99999)
+    #mb.print_weight()
     
-    mlp.fit([0.05, 0.1], [0.01, 0.99])
+
+    count = 0
+    for row in original_data:
+        print(row)
+        cls = mb.classify(row[:-1])
+        if cls == row[-1]:
+            count += 1
+        print(cls)
+    print('Accuracy : ', float(count)/len(original_data) * 100, ' %')    
     
-    for lvl, layer in enumerate(mlp.nodes):
-        print('Layer ' + str(lvl))
-        for i, node in enumerate(layer):
-            print('Node ' + str(i) + ' Value : ', end='')
-            print(node.value())
-    mlp.update_weight()
-    mlp.print_weight()
