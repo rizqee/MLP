@@ -1,8 +1,5 @@
 from mlp.node import Node, InputNode, BiasNode, OutputNode
 
-from math import exp
-
-
 class MultilayerPerceptron:
     def __init__(self, layer, learning_rate):
         if not layer:
@@ -75,3 +72,32 @@ class MultilayerPerceptron:
             else:
                 for node in layer:
                     node.update_weight()
+
+    def print_weight(self):
+        for lvl, layer in enumerate(self.nodes):
+            if lvl == 0:
+                continue
+            if lvl == len(self.nodes) - 1:
+                print('Layer Output')    
+            else:
+                print('Layer Hidden ' + str(lvl))
+            for i, node in enumerate(layer):
+                for j, prev_node in enumerate(self.nodes[lvl-1]):
+                    if lvl == 1:
+                        print('  Weight In' + str(j), end=' ')
+                    else:
+                        print('  Weight H' + str(lvl-1) + ',' + str(j), end='')
+                    if lvl == len(self.nodes) - 1 :
+                        print(' - Out' + str(i) + ': ', end='')
+                    else:
+                        print(' - H' + str(lvl) + ',' + str(i) + ': ', end='')
+                    print(node.input[prev_node][0])
+                print('  Weight Bias', end='')
+                if lvl == len(self.nodes) - 1 :
+                    print(' - Out' + str(i) + ': ', end='')
+                else:
+                    print(' - H' + str(lvl) + ',' + str(i) + ': ', end='')
+                print(node.input[BiasNode()][0])
+                                                    
+                    
+
