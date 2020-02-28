@@ -20,16 +20,17 @@ class InputNode(Node):
         self.val = val
 
 
-
 class BiasNode(Node):
     _instance = None
+
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super(BiasNode, cls).__new__(cls, *args, **kwargs)
         return cls._instance
-    
+
     def value(self):
         return 1
+
 
 class OutputNode(Node):
     def __init__(self, bias=0):
@@ -50,9 +51,6 @@ class OutputNode(Node):
 
     def value(self):
         return self.val
-
-    def error(self):
-        return self.error
 
     def calc_value(self):
         val = 0

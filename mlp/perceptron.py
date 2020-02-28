@@ -1,11 +1,13 @@
 from mlp.node import Node, InputNode, BiasNode, OutputNode
+
 import numpy as np
+
 
 class MultilayerPerceptron:
     def __init__(self, layer, learning_rate):
         if not layer:
             raise ValueError("layer must be a nonempty array")
-        
+
         self.input_layer = layer[0]
         self.output_layer = layer[-1]
 
@@ -80,8 +82,8 @@ class MultilayerPerceptron:
         return self.error_sum
 
     def update_error(self, target):
-        for i, node in enumerate(self.nodes[-1]): 
-            self.error_sum += (target[i] - node.value())**2 / 2
+        for i, node in enumerate(self.nodes[-1]):
+            self.error_sum += (target[i] - node.value()) ** 2 / 2
 
     def reset_error(self):
         self.error_sum = 0
@@ -99,33 +101,36 @@ class MultilayerPerceptron:
             if lvl == 0:
                 continue
             if lvl == len(self.nodes) - 1:
-                print('Layer Output')    
+                print("Layer Output")
             else:
-                print('Layer Hidden ' + str(lvl))
+                print("Layer Hidden " + str(lvl))
             for i, node in enumerate(layer):
-                for j, prev_node in enumerate(self.nodes[lvl-1]):
+                for j, prev_node in enumerate(self.nodes[lvl - 1]):
                     if lvl == 1:
-                        print('  Weight In' + str(j), end=' ')
+                        print("  Weight In" + str(j), end=" ")
                     else:
-                        print('  Weight H' + str(lvl-1) + ',' + str(j), end='')
-                    if lvl == len(self.nodes) - 1 :
-                        print(' - Out' + str(i) + ': ', end='')
+                        print("  Weight H" + str(lvl - 1) + "," + str(j), end="")
+                    if lvl == len(self.nodes) - 1:
+                        print(" - Out" + str(i) + ": ", end="")
                     else:
-                        print(' - H' + str(lvl) + ',' + str(i) + ': ', end='')
+                        print(" - H" + str(lvl) + "," + str(i) + ": ", end="")
                     print(node.input[prev_node][0])
-                print('  Weight Bias', end='')
-                if lvl == len(self.nodes) - 1 :
-                    print(' - Out' + str(i) + ': ', end='')
+                print("  Weight Bias", end="")
+                if lvl == len(self.nodes) - 1:
+                    print(" - Out" + str(i) + ": ", end="")
                 else:
-                    print(' - H' + str(lvl) + ',' + str(i) + ': ', end='')
+                    print(" - H" + str(lvl) + "," + str(i) + ": ", end="")
                 print(node.input[BiasNode()][0])
 
     def randomize_weight(self):
         for lvl, layer in enumerate(self.nodes):
             if lvl == 0:
                 continue
-            for i, node in enumerate(layer):
-                for j, prev_node in enumerate(self.nodes[lvl-1]):
-                    node.input[prev_node][0] = np.random.normal()*np.sqrt(1/(self.input_layer + self.output_layer))
-                node.input[BiasNode()][0] = np.random.normal()*np.sqrt(1/(self.input_layer + self.output_layer))                                    
-                    
+            for node in layer:
+                for prev_node in self.nodes[lvl - 1]:
+                    node.input[prev_node][0] = np.random.normal() * np.sqrt(
+                        2 / (self.input_layer + self.output_layer)
+                    )
+                node.input[BiasNode()][0] = np.random.normal() * np.sqrt(
+                    2 / (self.input_layer + self.output_layer)
+                )
